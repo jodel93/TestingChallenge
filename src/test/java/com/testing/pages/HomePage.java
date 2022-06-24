@@ -25,9 +25,12 @@ public class HomePage extends BasePage {
     private List<WebElement> listOfItems;
     @FindBy(className = "modal-dialog")
     private WebElement modalBox;
+    @FindBy(xpath = "//button[contains(text(),'Update Item')]")
+    private WebElement updateItemButton;
 
     private final String ITEM_LIST_XPATH = "//body/div[@id='content']/div[1]/div[1]/ul[1]/li";
-    private final String DELETE_ITEM_BUTTON =   ".//div[1]/div[1]/div[1]/button[2]";
+    private final String DELETE_ITEM_BUTTON = ".//div[1]/div[1]/div[1]/button[2]";
+    private final String EDIT_ITEM_BUTTON = ".//div[1]/div[1]/div[1]/button[1]";
     private final String MODAL_DELETE_BUTTON = "//button[contains(text(),'Yes, delete it!')]";
 
     private int itemCount;
@@ -77,8 +80,42 @@ public class HomePage extends BasePage {
         return listOfItems.size();
     }
 
+    public boolean isButtonActive(){ return createItemButton.isEnabled(); }
+
+    public WebElement searchItemInListByText(){
+        for (int i=0; i < getNewNumberOfItems(); i++){
+            String itemText = listOfItems.get(i).findElement(By.tagName("p")).getText();
+            if (itemText.contains("Creators: Matt Duffer, Ross Duffer"))
+                return listOfItems.get(i);
+        }
+        return null;
+    }
+
+    public void editElementFromList(int index){
+        getItem(index).findElement(By.xpath(EDIT_ITEM_BUTTON)).click();
+    }
+
+    public void updateDescription(String textToAdd){
+        wait.until(ExpectedConditions.visibilityOf(textAreaInput));
+        String oldDescription = textAreaInput.getText();
+        textAreaInput.sendKeys(oldDescription + " " + textToAdd);
+    }
+
+    public void clickUpdateDescriptionButton(){
+        waitClickableAndClick(updateItemButton);
+    }
+
+    public String getTextFromItem(int index){
+        return getItem(index).findElement(By.tagName("p")).getText();
+    }
+
     private WebElement getLastItem(){
         wait.until(ExpectedConditions.visibilityOfAllElements(listOfItems));
         return listOfItems.get(listOfItems.size() - 1);
+    }
+
+    private WebElement getItem(int index){
+        wait.until(ExpectedConditions.visibilityOfAllElements(listOfItems));
+        return listOfItems.get(index);
     }
 }
