@@ -1,0 +1,13 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="Angular Strangerlist Smoke" >
+    <test name="Basic Stuff">
+        <parameter name="textDescription" value="TEST"/>
+        <parameter name="imagePath" value="/src/test/resources/images/320x320.jpg"/>
+        <parameter name="maxTextDescription" value="300"/>
+        <parameter name="searchCriteria" value="Creators: Matt Duffer, Ross Duffer"/>
+        <parameter name="itemIndex" value="4"/>
+        <classes>
+            <class name ="com.testing.tests.ItemCreationTest"/>
+        </classes>
+    </test>
+</suite>

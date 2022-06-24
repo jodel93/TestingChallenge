@@ -16,6 +16,8 @@
     <selenium.version>3.141.59</selenium.version>
     <testNG.version>7.4.0</testNG.version>
     <spring.version>5.3.9</spring.version>
+    <maven.compiler.source>1.8</maven.compiler.source>
+    <maven.compiler.target>1.8</maven.compiler.target>
   </properties>
 
   <dependencies>
