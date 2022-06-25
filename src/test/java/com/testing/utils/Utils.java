@@ -5,7 +5,7 @@ import java.util.Random;
 public class Utils {
 
     public static String getFileNameFromPath(String filePath){
-        String[] splitPath = filePath.split("\\\\");
+        String[] splitPath = filePath.split("/");
         return splitPath[splitPath.length - 1];
     }
 

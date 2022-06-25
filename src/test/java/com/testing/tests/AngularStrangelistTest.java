@@ -3,7 +3,7 @@ package com.testing.tests;
 
 import com.testing.Driver;
 import com.testing.base.BaseTest;
-import com.testing.pages.HomePage;
+import com.testing.pages.AngularStrangelistHomePage;
 import com.testing.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,8 +15,6 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import java.net.URL;
-
 @DirtiesContext
 @ContextConfiguration(classes = {Driver.class})
 @PropertySource("classpath:/properties/config.properties")
@@ -26,7 +24,7 @@ public class AngularStrangelistTest extends BaseTest {
     private String url;
 
     @Autowired
-    private HomePage homePage;
+    private AngularStrangelistHomePage homePage;
 
     @Test(description = "Create new item using valid data")
     @Parameters({"textDescription", "imagePath"})
@@ -48,7 +46,7 @@ public class AngularStrangelistTest extends BaseTest {
     @Test(dependsOnMethods = "delete_newly_created_item")
     @Parameters({"imagePath", "maxTextDescription"})
     public void create_item_with_more_than_max_characters_description(String imagePath, String maxTextDescription){
-//        homePage.uploadImage(System.getProperty("user.dir") + imagePath);
+        homePage.uploadImage(System.getProperty("user.dir") + imagePath);
         homePage.fillDescription(Utils.getRandomText(Integer.parseInt(maxTextDescription) + 1));
         Assert.assertFalse(homePage.isButtonActive());
     }
@@ -65,7 +63,7 @@ public class AngularStrangelistTest extends BaseTest {
         homePage.editElementFromList(Integer.parseInt(itemIndex));
         homePage.updateDescription(textDescription);
         homePage.clickUpdateDescriptionButton();
-        Assert.assertTrue(homePage.getTextFromItem(4).contains(textDescription));
+        Assert.assertTrue(homePage.getTextFromItem(Integer.parseInt(itemIndex)).contains(textDescription));
     }
 
     @AfterClass(alwaysRun = true)

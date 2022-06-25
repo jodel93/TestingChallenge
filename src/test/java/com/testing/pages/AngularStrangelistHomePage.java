@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class HomePage extends BasePage {
+public class AngularStrangelistHomePage extends BasePage {
 
     //region Constants
     private final String ITEM_LIST_XPATH = "//body/div[@id='content']/div[1]/div[1]/ul[1]/li";
@@ -47,7 +47,7 @@ public class HomePage extends BasePage {
 
     //region Constructors
     @Autowired
-    public HomePage(WebDriver driver) {
+    public AngularStrangelistHomePage(WebDriver driver) {
         super(driver);
     }
     //endregion
@@ -83,8 +83,7 @@ public class HomePage extends BasePage {
 
     public void updateDescription(String textToAdd){
         wait.until(ExpectedConditions.visibilityOf(textAreaInput));
-        String oldDescription = textAreaInput.getText();
-        textAreaInput.sendKeys(oldDescription + " " + textToAdd);
+        textAreaInput.sendKeys(textToAdd);
     }
 
     public void clickUpdateDescriptionButton(){
