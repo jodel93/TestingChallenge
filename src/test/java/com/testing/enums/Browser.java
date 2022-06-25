@@ -3,7 +3,7 @@ package com.testing.enums;
 public enum Browser {
     chrome("chromedriver.exe"),
     firefox("geckodriver.exe"),
-    ie("");
+    edge("msedgedriver.exe");
 
     public String label;
 

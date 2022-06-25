@@ -6,6 +6,8 @@ import com.testing.base.BaseTest;
 import com.testing.pages.HomePage;
 import com.testing.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.Assert;
@@ -13,9 +15,15 @@ import org.testng.annotations.AfterClass;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import java.net.URL;
+
 @DirtiesContext
 @ContextConfiguration(classes = {Driver.class})
+@PropertySource("classpath:/properties/config.properties")
 public class AngularStrangelistTest extends BaseTest {
+
+    @Value("${home.url}")
+    private String url;
 
     @Autowired
     private HomePage homePage;
@@ -23,7 +31,7 @@ public class AngularStrangelistTest extends BaseTest {
     @Test(description = "Create new item using valid data")
     @Parameters({"textDescription", "imagePath"})
     public void create_new_item_with_valid_data(String textDescription, String imagePath){
-        homePage.navigateTo("http://immense-hollows-74271.herokuapp.com/");
+        homePage.navigateTo(url);
         homePage.uploadImage(System.getProperty("user.dir") + imagePath);
         homePage.fillDescription(textDescription);
         homePage.clickCreateItemButton();

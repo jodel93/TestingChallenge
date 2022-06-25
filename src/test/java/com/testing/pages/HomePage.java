@@ -130,7 +130,7 @@ public class HomePage extends BasePage {
     }
 
     private WebElement getItem(int index){
-        wait.until(ExpectedConditions.visibilityOfAllElements(listOfItems));
+       // wait.until(ExpectedConditions.visibilityOfAllElements(listOfItems));
         return listOfItems.get(index);
     }
     //endregion

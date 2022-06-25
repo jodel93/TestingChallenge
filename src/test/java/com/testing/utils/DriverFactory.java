@@ -22,8 +22,9 @@ public class DriverFactory {
                     String.format(localDriverPath, Browser.firefox.label));
             driver = new FirefoxDriver();
         }
-        if(Browser.ie == browser){
-            System.setProperty("webdriver.edge.driver", String.format(localDriverPath, "msedgediver.exe"));
+        if(Browser.edge == browser){
+            System.setProperty("webdriver.edge.driver",
+                    String.format(localDriverPath, Browser.edge.label));
             driver = new EdgeDriver();
         }
 

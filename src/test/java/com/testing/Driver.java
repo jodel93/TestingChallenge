@@ -19,10 +19,10 @@ import java.net.URL;
 @PropertySource("classpath:/properties/config.properties")
 public class Driver {
 
-    @Value("${browser.type:chrome}")
+    @Value("${local.browser.type}")
     private Browser browserType;
 
-    @Value("${remote.run:false}")
+    @Value("${remote.run}")
     private boolean isRemote;
 
     private WebDriver driver;
@@ -31,6 +31,7 @@ public class Driver {
 
     @Bean
     public WebDriver webDriver() throws MalformedURLException {
+
         if(isRemote){
 
             if(System.getProperty("HOST") != null)
