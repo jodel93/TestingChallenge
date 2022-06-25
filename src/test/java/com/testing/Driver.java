@@ -1,6 +1,7 @@
 package com.testing;
 
 import com.testing.enums.Browser;
+import com.testing.utils.ConfigurationManager;
 import com.testing.utils.DriverFactory;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -16,14 +17,7 @@ import java.net.URL;
 
 @Component
 @ComponentScan(basePackages = {"com.testing.base", "com.testing.pages"})
-@PropertySource("classpath:/properties/config.properties")
 public class Driver {
-
-    @Value("${browser.type:chrome}")
-    private Browser browserType;
-
-    @Value("${remote.run:false}")
-    private boolean isRemote;
 
     private WebDriver driver;
     private String hubHost;
@@ -31,7 +25,10 @@ public class Driver {
 
     @Bean
     public WebDriver webDriver() throws MalformedURLException {
-        if(isRemote){
+
+        ConfigurationManager configurationManager = ConfigurationManager.getInstance();
+
+        if(Boolean.parseBoolean(configurationManager.getConfiguration("REMOTE"))){
 
             if(System.getProperty("HOST") != null)
                 hubHost = System.getProperty("HOST");
@@ -55,6 +52,6 @@ public class Driver {
             return new RemoteWebDriver(new URL("http://"+ hubHost + ":4444/wd/hub"), desiredCapabilities);
         }
 
-        return DriverFactory.setUpDriver(browserType);
+        return DriverFactory.setUpDriver(Browser.valueOf(configurationManager.getConfiguration("BROWSER_TYPE")));
     }
 }
