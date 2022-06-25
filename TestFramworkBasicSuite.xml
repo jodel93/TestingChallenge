@@ -7,7 +7,7 @@
         <parameter name="searchCriteria" value="Creators: Matt Duffer, Ross Duffer"/>
         <parameter name="itemIndex" value="4"/>
         <classes>
-            <class name ="com.testing.tests.ItemCreationTest"/>
+            <class name ="com.testing.tests.AngularStrangelistTest"/>
         </classes>
     </test>
 </suite>

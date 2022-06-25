@@ -1,17 +1,21 @@
 package com.testing.tests;
 
+
 import com.testing.Driver;
 import com.testing.base.BaseTest;
 import com.testing.pages.HomePage;
 import com.testing.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.Assert;
+import org.testng.annotations.AfterClass;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+@DirtiesContext
 @ContextConfiguration(classes = {Driver.class})
-public class ItemCreationTest extends BaseTest {
+public class AngularStrangelistTest extends BaseTest {
 
     @Autowired
     private HomePage homePage;
@@ -36,7 +40,7 @@ public class ItemCreationTest extends BaseTest {
     @Test(dependsOnMethods = "delete_newly_created_item")
     @Parameters({"imagePath", "maxTextDescription"})
     public void create_item_with_more_than_max_characters_description(String imagePath, String maxTextDescription){
-        homePage.uploadImage(System.getProperty("user.dir") + imagePath);
+//        homePage.uploadImage(System.getProperty("user.dir") + imagePath);
         homePage.fillDescription(Utils.getRandomText(Integer.parseInt(maxTextDescription) + 1));
         Assert.assertFalse(homePage.isButtonActive());
     }
@@ -54,5 +58,10 @@ public class ItemCreationTest extends BaseTest {
         homePage.updateDescription(textDescription);
         homePage.clickUpdateDescriptionButton();
         Assert.assertTrue(homePage.getTextFromItem(4).contains(textDescription));
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void tearDown(){
+        homePage.getDriver().quit();
     }
 }

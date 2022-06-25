@@ -1,47 +1,60 @@
 package com.testing;
 
-import com.testing.utils.ConfigurationManager;
+import com.testing.enums.Browser;
+import com.testing.utils.DriverFactory;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.edge.EdgeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import org.openqa.selenium.remote.RemoteWebDriver;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
+
+import java.net.MalformedURLException;
+import java.net.URL;
 
 @Component
 @ComponentScan(basePackages = {"com.testing.base", "com.testing.pages"})
+@PropertySource("classpath:/properties/config.properties")
 public class Driver {
 
+    @Value("${browser.type:chrome}")
+    private Browser browserType;
+
+    @Value("${remote.run:false}")
+    private boolean isRemote;
+
     private WebDriver driver;
-    private final String localDriverPath = System.getProperty("user.dir") + "/src/test/resources/drivers/%s";
+    private String hubHost;
+    private DesiredCapabilities desiredCapabilities;
 
     @Bean
-    public WebDriver webDriver(){
-        String browser = ConfigurationManager.getInstance().getConfiguration("BROWSER");
+    public WebDriver webDriver() throws MalformedURLException {
+        if(isRemote){
 
-        if (browser.equalsIgnoreCase("chrome")){
-            System.setProperty("webdriver.chrome.driver", String.format(localDriverPath, "chromedriver.exe"));
-            ChromeOptions option = new ChromeOptions();
-//            option.addArguments("--headless");
-            this.driver = new ChromeDriver(option);
+            if(System.getProperty("HOST") != null)
+                hubHost = System.getProperty("HOST");
+            else hubHost = "localhost";
+
+            if(System.getProperty("BROWSER") != null &&
+                    System.getProperty("BROWSER").equalsIgnoreCase("firefox")) {
+                desiredCapabilities = DesiredCapabilities.firefox();
+            }
+
+            else if(System.getProperty("BROWSER") != null &&
+                    System.getProperty("BROWSER").equalsIgnoreCase("edge")){
+                desiredCapabilities = DesiredCapabilities.edge();
+            }
+
+            else
+            {
+                desiredCapabilities = DesiredCapabilities.chrome();
+            }
+
+            return new RemoteWebDriver(new URL("http://"+ hubHost + ":4444/wd/hub"), desiredCapabilities);
         }
 
-        if (browser.equalsIgnoreCase("firefox")){
-            System.setProperty("webdriver.geckodriver.driver", String.format(localDriverPath, "geckodriver.exe"));
-            this.driver = new FirefoxDriver();
-        }
-
-        if (browser.equalsIgnoreCase("edge")){
-            System.setProperty("webdriver.edge.driver", String.format(localDriverPath, "msedgediver.exe"));
-            this.driver = new EdgeDriver();
-        }
-
-        this.driver.manage().deleteAllCookies();
-        this.driver.manage().window().maximize();
-
-        return this.driver;
+        return DriverFactory.setUpDriver(browserType);
     }
 }
