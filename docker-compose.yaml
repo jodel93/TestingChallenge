@@ -1,19 +1,36 @@
 version: "3"
 services:
   hub:
-    image: selenium/hub:3.14
+    image: selenium/hub:4.1.0
     ports:
       - "4444:4444"
   chrome:
-    image: selenium/node-chrome:3.14
-    shm_size: '1gb'
+    image: selenium/node-chrome:4.1.0
+    shm_size: '2g'
     depends_on:
       - hub
     environment:
-      - HUB_HOST=hub
+      - SE_EVENT_BUS_HOST=hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
   firefox:
-    image: selenium/node-firefox:3.14
+    image: selenium/node-firefox:4.1.0
+    shm_size: '2g'
     depends_on:
       - hub
     environment:
-      - HUB_HOST=hub
+      - SE_EVENT_BUS_HOST=hub
+      - SE_EVENT_BUS_PUBLISH_PORT=4442
+      - SE_EVENT_BUS_SUBSCRIBE_PORT=4443
+  angular-strangelits-tests:
+    image: jorgedelgado93/testing-with-docker
+    depends_on:
+      - hub
+      - chrome
+      - firefox
+    environment:
+      - BROWSER=chrome
+      - HOST=hub
+      - MODULE=TestFramworkBasicSuite.xml
+    volumes:
+      - ./test-output:/usr/share/testing/test-output
