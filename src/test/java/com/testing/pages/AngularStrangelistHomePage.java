@@ -54,18 +54,24 @@ public class AngularStrangelistHomePage extends BasePage {
 
     //region Void Methods
     public void uploadImage(String filePath){
+        log.info(String.format("Uploading image %s", filePath));
         wait.until(ExpectedConditions.elementToBeClickable(imageInput));
         imageInput.sendKeys(filePath);
     }
 
-    public void fillDescription(String textDescriptions){ textAreaInput.sendKeys(textDescriptions); }
+    public void fillDescription(String textDescriptions){
+        log.info(String.format("Filling description with %s", textDescriptions));
+        textAreaInput.sendKeys(textDescriptions);
+    }
 
     public void clickCreateItemButton(){
+        log.info("Creating the new item...");
         setItemCount(getNewNumberOfItems());
         waitClickableAndClick(createItemButton);
     }
 
     public void deleteLastElementFromList(){
+        log.info("Deleting last element form the list");
         waitClickableAndClick(getLastItem().findElement(By.xpath(DELETE_ITEM_BUTTON)));
         waitClickableAndClick(modalBox.findElement(By.xpath(MODAL_DELETE_BUTTON)));
         wait.until(ExpectedConditions.numberOfElementsToBe(
@@ -78,15 +84,18 @@ public class AngularStrangelistHomePage extends BasePage {
     }
 
     public void editElementFromList(int index){
+        log.info(String.format("Editing element %s in the list", index));
         getItem(index).findElement(By.xpath(EDIT_ITEM_BUTTON)).click();
     }
 
     public void updateDescription(String textToAdd){
+        log.info(String.format("Updating description with %s", textToAdd));
         wait.until(ExpectedConditions.visibilityOf(textAreaInput));
         textAreaInput.sendKeys(textToAdd);
     }
 
     public void clickUpdateDescriptionButton(){
+        log.info("Updating element..");
         waitClickableAndClick(updateItemButton);
     }
     //endregion
@@ -115,6 +124,7 @@ public class AngularStrangelistHomePage extends BasePage {
 
     //region WebElements Methods
     public WebElement searchItemInListByText(String searchCriteria){
+        log.info(String.format("Searching item with description %s", searchCriteria));
         for (int i=0; i < getNewNumberOfItems(); i++){
             String itemText = listOfItems.get(i).findElement(By.tagName("p")).getText();
             if (itemText.contains(searchCriteria))

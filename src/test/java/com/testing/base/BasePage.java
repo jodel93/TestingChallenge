@@ -1,5 +1,7 @@
 package com.testing.base;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
@@ -13,6 +15,8 @@ public class BasePage {
 
     protected final WebDriver driver;
     protected final WebDriverWait wait;
+
+    protected static Logger log = LogManager.getLogger();
 
     @Autowired
     public BasePage(WebDriver driver) {

@@ -16,7 +16,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 @Component
-@ComponentScan(basePackages = {"com.testing.base", "com.testing.pages"})
+@ComponentScan(basePackages = {"com.testing"})
 @PropertySource("classpath:/properties/config.properties")
 public class Driver {
 

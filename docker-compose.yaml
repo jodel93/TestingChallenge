@@ -33,4 +33,4 @@ services:
       - HOST=hub
       - MODULE=TestFramworkBasicSuite.xml
     volumes:
-      - ./test-output:/usr/share/testing/test-output
+      - ./extent-reports:/usr/share/testing/extent-reports

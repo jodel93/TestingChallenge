@@ -3,6 +3,7 @@ package com.testing.tests;
 
 import com.testing.Driver;
 import com.testing.base.BaseTest;
+import com.testing.listener.TestListener;
 import com.testing.pages.AngularStrangelistHomePage;
 import com.testing.utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,12 +13,14 @@ import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.testng.Assert;
 import org.testng.annotations.AfterClass;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 @DirtiesContext
 @ContextConfiguration(classes = {Driver.class})
 @PropertySource("classpath:/properties/config.properties")
+@Listeners(TestListener.class)
 public class AngularStrangelistTest extends BaseTest {
 
     @Value("${home.url}")
@@ -26,7 +29,7 @@ public class AngularStrangelistTest extends BaseTest {
     @Autowired
     private AngularStrangelistHomePage homePage;
 
-    @Test(description = "Create new item using valid data")
+    @Test(priority = 0, description = "Create new item using valid data")
     @Parameters({"textDescription", "imagePath"})
     public void create_new_item_with_valid_data(String textDescription, String imagePath){
         homePage.navigateTo(url);
@@ -37,13 +40,13 @@ public class AngularStrangelistTest extends BaseTest {
         Assert.assertTrue(homePage.getTextFromLastItem().contains(textDescription));
     }
 
-    @Test(dependsOnMethods = "create_new_item_with_valid_data")
+    @Test(priority = 0, dependsOnMethods = "create_new_item_with_valid_data")
     public void delete_newly_created_item(){
         homePage.deleteLastElementFromList();
         Assert.assertEquals(homePage.getNewNumberOfItems(), homePage.getItemCount());
     }
 
-    @Test(dependsOnMethods = "delete_newly_created_item")
+    @Test(priority = 1)
     @Parameters({"imagePath", "maxTextDescription"})
     public void create_item_with_more_than_max_characters_description(String imagePath, String maxTextDescription){
         homePage.uploadImage(System.getProperty("user.dir") + imagePath);
@@ -51,13 +54,13 @@ public class AngularStrangelistTest extends BaseTest {
         Assert.assertFalse(homePage.isButtonActive());
     }
 
-    @Test(dependsOnMethods = "create_item_with_more_than_max_characters_description")
+    @Test(priority = 2)
     @Parameters({"searchCriteria"})
     public void search_for_existing_item_in_list(String searchCriteria){
         Assert.assertNotNull(homePage.searchItemInListByText(searchCriteria));
     }
 
-    @Test(dependsOnMethods = "search_for_existing_item_in_list")
+    @Test(priority = 3)
     @Parameters({"textDescription", "itemIndex"})
     public void edit_an_existing_item(String textDescription, String itemIndex){
         homePage.editElementFromList(Integer.parseInt(itemIndex));
